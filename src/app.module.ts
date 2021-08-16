@@ -20,7 +20,7 @@ const DB_CONFIG: TypeOrmModuleOptions = {
   type: 'sqlite',
   database: 'db.sqlite',
   entities: ENTITIES,
-  synchronize: true,
+  synchronize: true,  // this option is only for dev environment, NEVER to be used when in production env
 };
 
 @Module({
