@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
-import { UsersController } from 'src/users/controller/users.controller';
+import { AuthController, UsersController } from 'src/users/controller';
 import { UsersService } from 'src/users/service/users.service';
 import { User } from './entity/users.entity';
 
@@ -14,7 +14,7 @@ const ENTITIES: EntityClassOrSchema[] = [
 ];
 
 @Module({
-  controllers: [UsersController],
+  controllers: [UsersController, AuthController],
   imports: [TypeOrmModule.forFeature(ENTITIES)],
   providers: [UsersService]
 })
