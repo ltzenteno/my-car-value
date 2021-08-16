@@ -6,11 +6,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
+import { User } from './users/entity/users.entity';
 
 const DB_CONFIG: TypeOrmModuleOptions = {
   type: 'sqlite',
   database: 'db.sqlite',
-  entities: [],
+  entities: [User],   // TODO: find a better solution to avoid importing the entity here
   synchronize: true,
 };
 
