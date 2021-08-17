@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -18,5 +18,38 @@ export class UsersService {
     const entity = this.userRepository.create(dto);
 
     return this.userRepository.save(entity);
+  }
+
+  findOne(id: number): Promise<User> {
+    return this.userRepository.findOne(id);
+  }
+
+  find(email: string): Promise<User[]> {
+    return this.userRepository.find({ email });
+  }
+
+  async update(id: number, attrs: Partial<User>): Promise<User> {
+    const entity = await this.findOne(id);
+
+    if (!entity) {
+      // TODO: throw a TypeORM exception
+      throw new NotFoundException('User not found');
+    }
+
+    Object.assign(entity, attrs);
+
+    return this.userRepository.save(entity);
+  }
+
+  async remove(id: number) {
+    const entity = await this.findOne(id);
+
+    if (!entity) {
+      // TODO: throw a TypeORM exception
+      throw new NotFoundException('User not found');
+    }
+
+    // we use remove instead of delete(id) passing an entity to run the @AfterRemove hook inside the entity
+    return this.userRepository.remove(entity);
   }
 }
