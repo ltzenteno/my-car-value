@@ -1,16 +1,16 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, UseInterceptors } from '@nestjs/common';
-import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserDto } from '../dto/user.dto';
 import { User } from '../entity/users.entity';
 import { UsersService } from '../service/users.service';
 
 @Controller('users/')
+@Serialize(UserDto)   // NOTE: this can be at global level, controller level, or method (route) level
 export class UsersController {
 
   constructor(private userService: UsersService) {}
 
-  @UseInterceptors(new SerializeInterceptor(UserDto))
   @Get(':id')
   async find(@Param('id') id: string): Promise<User> {
     console.log('2. handler is running (in UserController)');
@@ -26,6 +26,7 @@ export class UsersController {
 
   @Get()
   findAll(@Query('email') email: string): Promise<User[]> {
+    console.log('2. handler is running (in UserController)');
     return this.userService.find(email);
   }
 

@@ -1,10 +1,24 @@
-import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, NestInterceptor, UseInterceptors } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { map, Observable } from 'rxjs';
 
+/**
+ * This interface will elp us ensure tat the param sent to the Serialize decorator is a Class
+ */
+interface ClassConstructor {
+  new (...args: any[]): {}
+}
+
+/**
+ * Custom Serialize decorator
+ */
+export function Serialize(dto: ClassConstructor) {
+  return UseInterceptors(new SerializeInterceptor(dto));
+}
+
 export class SerializeInterceptor implements NestInterceptor {
 
-  constructor(private dto: any) {}
+  constructor(private dto: ClassConstructor) {}
 
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
     // 1. Run something before a request is handled by the request handler
