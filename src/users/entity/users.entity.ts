@@ -9,6 +9,8 @@ export class User {
   @Column()
   email: string;
 
+  // here we could use the @Exclude() and it would exclude this field from every response
+  // but instead we will implement a custom interceptor (better solution)
   @Column()
   password: string;
 

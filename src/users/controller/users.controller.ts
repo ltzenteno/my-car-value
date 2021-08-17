@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, UseInterceptors } from '@nestjs/common';
+import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../entity/users.entity';
 import { UsersService } from '../service/users.service';
@@ -8,8 +9,11 @@ export class UsersController {
 
   constructor(private userService: UsersService) {}
 
+  @UseInterceptors(SerializeInterceptor)
   @Get(':id')
   async find(@Param('id') id: string): Promise<User> {
+    console.log('2. handler is running (in UserController)');
+
     const user = await this.userService.findOne(parseInt(id));
 
     if (!user) {
