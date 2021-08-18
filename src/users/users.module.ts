@@ -4,6 +4,7 @@ import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-clas
 import { AuthController, UsersController } from 'src/users/controller';
 import { UsersService } from 'src/users/service/users.service';
 import { User } from './entity/users.entity';
+import { AuthService } from './service/auth.service';
 
 /**
  * List that contains all entities for this module
@@ -16,6 +17,6 @@ const ENTITIES: EntityClassOrSchema[] = [
 @Module({
   controllers: [UsersController, AuthController],
   imports: [TypeOrmModule.forFeature(ENTITIES)],
-  providers: [UsersService]
+  providers: [AuthService, UsersService],
 })
 export class UsersModule {}
