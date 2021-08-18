@@ -34,6 +34,11 @@ export class AuthController {
     return user;
   }
 
+  @Post('signout')
+  signOut(@Session() session: any): void {
+    session.userId = null;
+  }
+
   // ----- START cookie session example methods (not used in the app, just to see how cookies work)
 
   // NOTE: this approach (cookie session) is STATEFUL

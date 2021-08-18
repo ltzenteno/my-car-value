@@ -21,6 +21,12 @@ export class UsersService {
   }
 
   findOne(id: number): Promise<User> {
+
+    // this is because a "glitch" on the findOne method
+    if (!id) {
+      throw new NotFoundException('User not found');
+    }
+
     return this.userRepository.findOne(id);
   }
 
