@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, Session } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserDto } from '../dto/user.dto';
@@ -10,6 +10,12 @@ import { UsersService } from '../service/users.service';
 export class UsersController {
 
   constructor(private userService: UsersService) {}
+
+  @Get('me')
+  whoAmI(@Session() session: any): Promise<User> {
+    // session.userId is set in AuthController.createUser and AuthController.authenticate
+    return this.userService.findOne(session.userId);
+  }
 
   @Get(':id')
   async find(@Param('id') id: string): Promise<User> {
