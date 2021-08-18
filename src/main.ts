@@ -2,8 +2,15 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
+const cookieSession = require('cookie-session');
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // adding cookie session middleware
+  app.use(cookieSession({
+    keys: ['owkeoijcmawj'], // random characters TODO: find a better solution
+  }));
 
   app.useGlobalPipes(
     new ValidationPipe({

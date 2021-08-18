@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Session } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserDto } from '../dto/user.dto';
@@ -16,13 +16,38 @@ export class AuthController {
     ) {}
 
   @Post('signup')
-  createUser(@Body() body: CreateUserDto): Promise<User> {
-    return this.authService.signUp(body);
+  async createUser(@Body() body: CreateUserDto, @Session() session: any): Promise<User> {
+    const user = await this.authService.signUp(body);
+
+    session.userId = user.id;
+
+    return user;
   }
 
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  authenticate(@Body() body: CreateUserDto): Promise<User> {
-    return this.authService.authenticate(body);
+  async authenticate(@Body() body: CreateUserDto, @Session() session: any): Promise<User> {
+    const user = await this.authService.authenticate(body);
+
+    session.userId = user.id;
+
+    return user;
   }
+
+  // ----- START cookie session example methods (not used in the app, just to see how cookies work)
+
+  // NOTE: this approach (cookie session) is STATEFUL
+  // it is better to use other solutions like JWT
+
+  @Get('colors/:color')
+  setColor(@Param('color') color: string, @Session() session: any): void {
+    session.color = color;
+  }
+
+  @Get('colors')
+  getColor(@Session() session: any) {
+    return session.color;
+  }
+
+  // ----- END cookie session example methods
 }
