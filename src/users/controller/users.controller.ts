@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, Session } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, Session, UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CurrentUser } from '../decorator/current-user.decorator';
 import { UpdateUserDto } from '../dto/update-user.dto';
@@ -23,6 +24,7 @@ export class UsersController {
    * this approach is way better
    */
   @Get('whoami')
+  @UseGuards(AuthGuard)
   // NOTES:
   // commenting @UseInterceptors decorator here to use the globally scoped interceptor approach (see users.module.ts)
   // but this decision depends on each use case (sometimes is better to use it controller scoped, sometimes globally scoped)
