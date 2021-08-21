@@ -1,10 +1,9 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, Session, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, Session } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CurrentUser } from '../decorator/current-user.decorator';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserDto } from '../dto/user.dto';
 import { User } from '../entity/users.entity';
-import { CurrentUserInterceptor } from '../interceptor/current-user.interceptor';
 import { UsersService } from '../service/users.service';
 
 @Controller('users/')
@@ -24,7 +23,10 @@ export class UsersController {
    * this approach is way better
    */
   @Get('whoami')
-  @UseInterceptors(CurrentUserInterceptor)  // this can be used at the controller level as well
+  // NOTES:
+  // commenting @UseInterceptors decorator here to use the globally scoped interceptor approach (see users.module.ts)
+  // but this decision depends on each use case (sometimes is better to use it controller scoped, sometimes globally scoped)
+  // @UseInterceptors(CurrentUserInterceptor)  // this can be used at the controller level as well
   current(@CurrentUser() user: User) {
     return user;
   }
