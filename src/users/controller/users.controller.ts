@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, Session } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Query, Session, UseInterceptors } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { CurrentUser } from '../decorator/current-user.decorator';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserDto } from '../dto/user.dto';
 import { User } from '../entity/users.entity';
+import { CurrentUserInterceptor } from '../interceptor/current-user.interceptor';
 import { UsersService } from '../service/users.service';
 
 @Controller('users/')
@@ -15,6 +17,16 @@ export class UsersController {
   whoAmI(@Session() session: any): Promise<User> {
     // session.userId is set in AuthController.createUser and AuthController.authenticate
     return this.userService.findOne(session.userId);
+  }
+
+  /**
+   * like whoAmI but using the custom decorator @CurrentUser
+   * this approach is way better
+   */
+  @Get('whoami')
+  @UseInterceptors(CurrentUserInterceptor)  // this can be used at the controller level as well
+  current(@CurrentUser() user: User) {
+    return user;
   }
 
   @Get(':id')
