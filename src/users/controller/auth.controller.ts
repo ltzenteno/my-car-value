@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Session } from '@nestjs/common';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from '../../interceptors/serialize.interceptor';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserDto } from '../dto/user.dto';
 import { User } from '../entity/users.entity';
