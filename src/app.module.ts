@@ -10,6 +10,8 @@ import { User } from './users/entity/users.entity';
 import { Report } from './reports/entity/report.entity';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import { APP_PIPE } from '@nestjs/core';
+import { ConfigModule, ConfigModuleOptions, ConfigService } from '@nestjs/config';
+import { CapacitorConnectionOptions } from 'typeorm/driver/capacitor/CapacitorConnectionOptions';
 
 const cookieSession = require('cookie-session');
 
@@ -19,16 +21,26 @@ const ENTITIES: EntityClassOrSchema[] = [
   Report,
 ];
 
-const DB_CONFIG: TypeOrmModuleOptions = {
-  type: 'sqlite',
-  database: 'db.sqlite',
-  entities: ENTITIES,
-  synchronize: true,  // this option is only for dev environment, NEVER to be used when in production env
+const CONFIG_OPTIONS: ConfigModuleOptions = {
+  isGlobal: true,
+  envFilePath: `${process.env.NODE_ENV}.env`,
 };
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(DB_CONFIG),
+    ConfigModule.forRoot(CONFIG_OPTIONS),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],    // injecting ConfigService to have access to the config
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions | Promise<TypeOrmModuleOptions> => {
+
+        return {
+          type: 'sqlite',
+          database: configService.get<string>('DB_NAME'),
+          entities: ENTITIES,
+          synchronize: true,  // this option is only for dev environment, NEVER to be used when in production env
+        };
+      },
+    }),
     UsersModule,
     ReportsModule
   ],
