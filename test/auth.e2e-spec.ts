@@ -32,4 +32,27 @@ describe('Authentication System', () => {
         expect(email).toEqual(expectedEmail);
       })
   });
+
+  it('signup as a new user then get the logged user (whoami)', async () => {
+    const email = 'test@test.com';
+
+    const response = await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({
+        email: email,
+        password: 'secret'
+      })
+      .expect(201);
+
+    // superagent by default does not handle cookies for us
+    // we need to temporarily store it manually
+    const cookie = response.get('Set-Cookie');
+
+    const { body } = await request(app.getHttpServer())
+      .get('/users/whoami/')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body.email).toEqual(email);
+  });
 });
