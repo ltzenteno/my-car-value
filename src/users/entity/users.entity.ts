@@ -1,4 +1,5 @@
-import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Report } from '../../reports/entity/report.entity';
 
 @Entity()
 export class User {
@@ -14,6 +15,12 @@ export class User {
   @Column()
   password: string;
 
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
+
+
+  // TODO: move listeners down below to subscribers outside the entity
+  // https://medium.com/@Semyonic/subscribers-a-k-a-entity-listeners-of-typeorm-on-nestjs-a97ac75acc2d
   /**
    * Function that logs after inserting into the DB
    * it uses the `@AfterInsert` TypeORM hook

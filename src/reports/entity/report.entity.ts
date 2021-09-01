@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../users/entity/users.entity';
 
 @Entity()
 export class Report {
@@ -26,4 +27,12 @@ export class Report {
 
   @Column()
   mileage: number;
+
+  /*
+   * @param first param: we always pass a function that returns the entity
+   * to avoid problems when having circular dependencies
+   * @param second param: specific to typeORM, how the entity instance will relate to this entity
+   */
+  @ManyToOne(() => User, (user) => user.reports)
+  user: User;
 }
