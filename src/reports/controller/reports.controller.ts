@@ -1,6 +1,10 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../guards/auth.guard';
+import { Serialize } from '../../interceptors/serialize.interceptor';
+import { CurrentUser } from '../../users/decorator/current-user.decorator';
+import { User } from '../../users/entity/users.entity';
 import { CreateReportDto } from '../dto/create-report.dto';
+import { ReportDto } from '../dto/report.dto';
 import { Report } from '../entity/report.entity';
 import { ReportsService } from '../service/reports.service';
 
@@ -10,8 +14,10 @@ export class ReportsController {
 
   constructor(private reportsService: ReportsService) {}
 
+  @Serialize(ReportDto)
   @Post()
-  create(@Body() body: CreateReportDto): Promise<Report> {
-    return this.reportsService.create(body);
+  create(@Body() body: CreateReportDto, @CurrentUser() user: User): Promise<Report> {
+
+    return this.reportsService.create(body, user);
   }
 }

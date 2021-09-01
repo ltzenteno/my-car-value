@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../../users/entity/users.entity';
 import { CreateReportDto } from '../dto/create-report.dto';
 import { Report } from '../entity/report.entity';
 
@@ -14,8 +15,10 @@ export class ReportsService {
    * @param {CreateReportDto} dto 
    * @returns {Promise<Report>}
    */
-  async create(dto: CreateReportDto): Promise<Report> {
+  async create(dto: CreateReportDto, user: User): Promise<Report> {
     const entity = this.reportRepository.create(dto);
+
+    entity.user = user;
 
     return this.reportRepository.save(entity);
   }

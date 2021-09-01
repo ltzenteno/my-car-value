@@ -3,7 +3,7 @@ import { plainToClass } from 'class-transformer';
 import { map, Observable } from 'rxjs';
 
 /**
- * This interface will elp us ensure tat the param sent to the Serialize decorator is a Class
+ * This interface will help us ensure tat the param sent to the Serialize decorator is a Class
  */
 interface ClassConstructor {
   new (...args: any[]): {}
