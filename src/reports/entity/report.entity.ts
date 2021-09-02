@@ -28,6 +28,9 @@ export class Report {
   @Column()
   mileage: number;
 
+  @Column({ default: false })
+  approved: boolean;
+
   /*
    * @param first param: we always pass a function that returns the entity
    * to avoid problems when having circular dependencies
