@@ -18,6 +18,8 @@ export class User {
   @OneToMany(() => Report, (report) => report.user)
   reports: Report[];
 
+  @Column({ default: true })  // TODO: change to false
+  isAdmin: boolean;
 
   // TODO: move listeners down below to subscribers outside the entity
   // https://medium.com/@Semyonic/subscribers-a-k-a-entity-listeners-of-typeorm-on-nestjs-a97ac75acc2d

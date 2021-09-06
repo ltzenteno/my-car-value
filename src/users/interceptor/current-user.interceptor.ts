@@ -3,6 +3,11 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { Observable } from 'rxjs';
 import { UsersService } from '../service/users.service';
 
+/**
+ * DEPRECATED: since interceptors run AFTER middlewares and guards, this interceptor
+ * isn't useful when we try to use it inside the AdminGuard (currentUser is always undefined), so I'll stop using it
+ * in lieu of CurrentUserMiddleware! (see Section 16. Chapter 134 of https://www.udemy.com/course/nestjs-the-complete-developers-guide/learn/lecture/27443276)
+ */
 @Injectable()
 export class CurrentUserInterceptor implements NestInterceptor {
 
@@ -10,7 +15,7 @@ export class CurrentUserInterceptor implements NestInterceptor {
 
   async intercept(context: ExecutionContext, next: CallHandler<any>): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
-    
+
     const { userId } = request.session || {};
 
     if (userId) {
@@ -22,5 +27,5 @@ export class CurrentUserInterceptor implements NestInterceptor {
 
     return next.handle();
   }
-  
+
 }
