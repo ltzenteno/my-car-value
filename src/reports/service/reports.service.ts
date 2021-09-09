@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../users/entity/users.entity';
 import { CreateReportDto } from '../dto/create-report.dto';
+import { GetEstimateDto } from '../dto/get-estimate-dto';
 import { Report } from '../entity/report.entity';
 
 @Injectable()
@@ -34,5 +35,26 @@ export class ReportsService {
 
     entity.approved = approved;
     return this.reportRepository.save(entity);
+  }
+
+  /**
+   * Find reports for the same make and model, within +/- 5 degrees, within 3 years and order by closest mileage
+   * then return the top 3 closest reports
+   * @param {GetEstimateDto} dto
+   * @returns {Promise<Report[]>}
+   */
+  createEstimate({ make, model, lng, lat, year, mileage }: GetEstimateDto): Promise<Report> {
+    return this.reportRepository.createQueryBuilder()
+      .select('AVG(price)', 'price')
+      .where('make like :make', { make: `%${make}%` })
+      .andWhere('model = :model', { model })
+      .andWhere('lng - :lng BETWEEN -5 AND 5', { lng })
+      .andWhere('lat - :lat BETWEEN -5 AND 5', { lat })
+      .andWhere('year - :year BETWEEN -3 AND 3', { year })
+      .andWhere('approved IS TRUE')
+      .orderBy('ABS(mileage - :mileage)', 'DESC')
+      .setParameters({ mileage })
+      .limit(3)
+      .getRawOne<Report>();
   }
 }
