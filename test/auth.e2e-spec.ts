@@ -37,12 +37,12 @@ describe('Authentication System', () => {
     const email = 'test@test.com';
 
     const response = await request(app.getHttpServer())
-      .post('/auth/signup')
+      .post('/auth/signin')
       .send({
         email: email,
         password: 'secret'
       })
-      .expect(201);
+      .expect(200);
 
     // superagent by default does not handle cookies for us
     // we need to temporarily store it manually

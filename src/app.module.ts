@@ -28,18 +28,7 @@ const CONFIG_OPTIONS: ConfigModuleOptions = {
 @Module({
   imports: [
     ConfigModule.forRoot(CONFIG_OPTIONS),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],    // injecting ConfigService to have access to the config
-      useFactory: (configService: ConfigService): TypeOrmModuleOptions | Promise<TypeOrmModuleOptions> => {
-
-        return {
-          type: 'sqlite',
-          database: configService.get<string>('DB_NAME'),
-          entities: ENTITIES,
-          synchronize: true,  // this option is only for dev environment, NEVER to be used when in production env
-        };
-      },
-    }),
+    TypeOrmModule.forRoot(),
     UsersModule,
     ReportsModule
   ],
