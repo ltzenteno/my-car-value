@@ -11,7 +11,6 @@ import { Report } from './reports/entity/report.entity';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule, ConfigModuleOptions, ConfigService } from '@nestjs/config';
-import { CapacitorConnectionOptions } from 'typeorm/driver/capacitor/CapacitorConnectionOptions';
 
 const cookieSession = require('cookie-session');
 
@@ -56,11 +55,14 @@ const CONFIG_OPTIONS: ConfigModuleOptions = {
   ],
 })
 export class AppModule {
+
+  constructor(private configService: ConfigService) {}
+
   /**
    * This configure fn is going to be called automatically
    * whenever our application starts listening for incoming traffic
    * code inside will run on every single request
-   * @param consumer 
+   * @param consumer
    */
   configure(consumer: MiddlewareConsumer) {
     // NOTE: moving coookieSession from main.ts
@@ -69,7 +71,7 @@ export class AppModule {
 
     // adding cookie session middleware (globally scoped)
     consumer.apply(cookieSession({
-      keys: ['owkeoijcmawj'], // random characters TODO: find a better solution
+      keys: [this.configService.get('COOKIE_KEY')],
     })).forRoutes('*');
   }
 }
