@@ -22,7 +22,7 @@ const ENTITIES: EntityClassOrSchema[] = [
 
 const CONFIG_OPTIONS: ConfigModuleOptions = {
   isGlobal: true,
-  envFilePath: `${process.env.NODE_ENV}.env`,
+  envFilePath: process.env.NODE_ENV === 'development' ? '.env' : `${process.env.NODE_ENV}.env`,
 };
 
 @Module({

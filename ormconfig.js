@@ -9,8 +9,12 @@ const dbConfig = {
 switch (process.env.NODE_ENV) {
   case 'development':
     Object.assign(dbConfig, {
-      type: 'sqlite',
-      database: 'db.sqlite',
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
       entities: ['**/*.entity.js'],
     });
     break;
@@ -19,6 +23,7 @@ switch (process.env.NODE_ENV) {
       type: 'sqlite',
       database: 'test.sqlite',
       entities: ['**/*.entity.ts'], // for dev environment it is needed js, but for running e2e tests, it needs .ts
+      migrationsRun: true,
     });
     break;
   case 'production':

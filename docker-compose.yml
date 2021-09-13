@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+  dev:
+    container_name: nestjs_dev
+    image: nestjs-dev:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: provision/docker/Dockerfile
+    command: npm run start:debug
+    ports:
+      - 3000:3000
+    networks:
+      - backend-network
+    volumes:
+      - .:/usr/src/app/:delegated
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    depends_on:
+      - db
+
+  # prod:
+  #   container_name: nestjs_prod
+  #   image: nestjs-prod:1.0.0
+  #   build:
+  #     context: .
+  #     target: production
+  #     dockerfile: provision/docker/Dockerfile
+  #   command: npm run start:prod
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - backend-network
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - db
+
+  db:
+    container_name: postgres_12_3
+    image: postgres:12.3
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    env_file: ./.env
+    volumes:
+      - 'postgres_data:/var/lib/postgresql/data/'
+    networks:
+      - backend-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  backend-network:
+    driver: bridge

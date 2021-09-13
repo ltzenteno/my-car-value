@@ -1,5 +1,9 @@
 ## Migrations through the `typeorm` cli
 
+First you have to enter the backend nestjs container with:
+
+    docker exec -it nestjs_dev /bin/sh
+
 ---
 
 ### To generate migrations
@@ -19,3 +23,7 @@ based on [https://typeorm.io/#/migrations/running-and-reverting-migrations](http
 to run a `.js` migration:
 
     npm run typeorm migration:run
+
+## Create dockerfile for prod
+
+[https://dev.to/erezhod/setting-up-a-nestjs-project-with-docker-for-back-end-development-30lg](https://dev.to/erezhod/setting-up-a-nestjs-project-with-docker-for-back-end-development-30lg)
