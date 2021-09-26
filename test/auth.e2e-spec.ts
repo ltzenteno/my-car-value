@@ -36,6 +36,16 @@ describe('Authentication System', () => {
   it('signup as a new user then get the logged user (whoami)', async () => {
     const email = 'test@test.com';
 
+    // creating user
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({
+        email: email,
+        password: 'secret'
+      })
+      .expect(201);
+
+      // sign-in
     const response = await request(app.getHttpServer())
       .post('/auth/signin')
       .send({

@@ -27,3 +27,8 @@ to run a `.js` migration:
 ## Create dockerfile for prod
 
 [https://dev.to/erezhod/setting-up-a-nestjs-project-with-docker-for-back-end-development-30lg](https://dev.to/erezhod/setting-up-a-nestjs-project-with-docker-for-back-end-development-30lg)
+
+### Run e2e tests inside container
+
+    docker exec -it nestjs_dev /bin/sh
+    npm run test:e2e

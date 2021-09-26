@@ -23,7 +23,7 @@ switch (process.env.NODE_ENV) {
       type: 'sqlite',
       database: 'test.sqlite',
       entities: ['**/*.entity.ts'], // for dev environment it is needed js, but for running e2e tests, it needs .ts
-      migrationsRun: true,
+      migrationsRun: true,  // all our migrations run when we run e2e tests
     });
     break;
   case 'production':
