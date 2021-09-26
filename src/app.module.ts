@@ -1,24 +1,16 @@
 import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
-import { User } from './users/entity/users.entity';
-import { Report } from './reports/entity/report.entity';
-import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule, ConfigModuleOptions, ConfigService } from '@nestjs/config';
+import { WarmupService } from './warmup.service';
 
 const cookieSession = require('cookie-session');
-
-// TODO: find a better solution to avoid importing entities directly in this file
-const ENTITIES: EntityClassOrSchema[] = [
-  User,
-  Report,
-];
 
 const CONFIG_OPTIONS: ConfigModuleOptions = {
   isGlobal: true,
@@ -35,6 +27,7 @@ const CONFIG_OPTIONS: ConfigModuleOptions = {
   controllers: [AppController],
   providers: [
     AppService,
+    WarmupService,
     {   // NOTE: moving ValidationPipe from main.ts to app.module.ts, so we can use it in e2e tests! (this is a better approach than doing it in main.ts)
       provide: APP_PIPE,
       useValue: new ValidationPipe({
